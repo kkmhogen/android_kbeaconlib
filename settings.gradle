@@ -1,0 +1,3 @@
+include ':kbeaconlib'
+include ':app'
+rootProject.name = "kbeacon_library"
