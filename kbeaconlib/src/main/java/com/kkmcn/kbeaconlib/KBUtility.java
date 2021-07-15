@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class KBUtility {
 
     public static final ParcelUuid PARCE_UUID_EDDYSTONE = ParcelUuid.fromString("0000FEAA-0000-1000-8000-00805f9b34fb");
-
+    public static final int APPLE_MANUFACTURE_ID = 0x004C;
     public static final ParcelUuid PARCE_UUID_EXT_DATA = ParcelUuid.fromString("00002080-0000-1000-8000-00805f9b34fb");
 
     public static final UUID KB_CFG_SERVICE_UUID = UUID.fromString("0000FEA0-0000-1000-8000-00805f9b34fb");

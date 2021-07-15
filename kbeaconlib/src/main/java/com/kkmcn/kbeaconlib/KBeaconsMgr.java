@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
@@ -17,6 +18,7 @@ import android.util.Log;
 
 import com.kkmcn.kbeaconlib.KBAdvPackage.KBAdvType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +152,17 @@ public class KBeaconsMgr {
 
         return true;
     }
+	
+    public BluetoothManager getBluetoothManager()
+    {
+        return mBluetoothManager;
+    }
 
+    public BluetoothAdapter getBluetoothAdapter()
+    {
+        return mBluetoothAdapter;
+    }
+	
     public HashMap Beacons()
     {
         return mCbKBeacons;
@@ -262,11 +274,22 @@ public class KBeaconsMgr {
             {
                 scanMode = ScanSettings.SCAN_MODE_BALANCED;
             }
+            ScanSettings.Builder scanSetting = new ScanSettings.Builder().setScanMode(scanMode);
 
             //start scan
-            ScanSettings.Builder setsBuild;
-            setsBuild = new ScanSettings.Builder().setScanMode(scanMode);
-            scaner.startScan(null, setsBuild.build(), mNPhoneCallback);
+            //scan filter
+            List<ScanFilter> filterList = new ArrayList<>(2);
+            ScanFilter.Builder filter1 = new ScanFilter.Builder().setServiceUuid(KBUtility.PARCE_UUID_EDDYSTONE);
+            ScanFilter.Builder filter2 = new ScanFilter.Builder().setServiceUuid(KBUtility.PARCE_UUID_EXT_DATA);
+            byte[] iBeaconFilter = {0x02, 0x15};
+            ScanFilter.Builder filter3 = new ScanFilter.Builder().setManufacturerData(KBUtility.APPLE_MANUFACTURE_ID,
+                    iBeaconFilter);
+            filterList.add(filter1.build());
+            filterList.add(filter2.build());
+            filterList.add(filter3.build());
+
+            scaner.startScan(filterList, scanSetting.build(), mNPhoneCallback);
+
             mLastScanTick = System.currentTimeMillis();
             mIsScanning = true;
 
